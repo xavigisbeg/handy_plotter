@@ -8,52 +8,56 @@ class HandyPlotter:
         more plots where data has been smoothened through averaging"""
 
     def __init__(self):
-        pass
+        self.plt = plt
 
     def plot_all(
             self,
-            path,
-            plt,
+            pathIn,
+            pathOut,
             nAvg,
+            xLim,
+            yLim,
+            xTicks,
+            yTicks,
             ):
-        path = '/home/pi/results/insert/2017_0011'
-        ls = sorted(os.listdir(path))
+        'Function that generates all the graphs'
 
+        ls = sorted(os.listdir(pathIn))
         for fle in ls:
             if ('log' not in fle):
                 xVals, yVals, xAvgVals, yAvgVals = self.read_excels(
                     path='{}/{}'.format(
-                        path,
+                        pathIn,
                         fle),
                     nAvg=nAvg,
                     )
 
-                plt.figure(1)
-                plt = self.add_plot(
+                self.plt.figure(1)
+                self.plt = self.add_plot(
                     xvals=xVals,
                     yvals=yVals,
                     # color='b',
-                    plt=plt,
+                    plt=self.plt,
                     )
 
                 for i in range(len(xAvgVals)):
-                    plt.figure(i + 2)
-                    plt = self.add_plot(
+                    self.plt.figure(i + 2)
+                    self.plt = self.add_plot(
                         xvals=xAvgVals[i],
                         yvals=yAvgVals[i],
                         # color='b',
-                        plt=plt,
+                        plt=self.plt,
                         )
 
         for i in range(len(xAvgVals) + 1):
-            plt.figure(i + 1)
+            self.plt.figure(i + 1)
             self.save_plot(
-                xlim=(0, 2),
-                ylim=(0, 18000),
-                xticks=(0, 2, 0.2),
-                yticks=(0, 18000, 1000),
-                plt=plt,
-                path='/home/pi/results/plots/graf{}.png'.format(i),
+                xLim=xLim,  # (0, 2),
+                yLim=yLim,  # (0, 18000),
+                xTicks=xTicks,  # (0, 2, 0.2),
+                yTicks=yTicks,  # (0, 18000, 1000),
+                plt=self.plt,
+                path='{}/graf{}.png'.format(pathOut, i),
                 )
 
     def add_plot(
@@ -119,29 +123,23 @@ class HandyPlotter:
 
     def save_plot(
             self,
-            xlim,
-            ylim,
-            xticks,
-            yticks,
+            xLim,
+            yLim,
+            xTicks,
+            yTicks,
             plt,
-            path='/home/pi/results/plots/graf.png',
+            path,  # ='/home/pi/results/plots/graf.png',
             ):
         'Saves a simple plot with the introduced data'
 
-        plt.xlim(xlim)
-        # plt.ylim(ylim)
+        plt.xlim(xLim)
+        # plt.yLim(yLim)
         plt.ylim(ymin=0)
-        plt.xticks(np.arange(xticks[0], xticks[1], xticks[2]))
-        plt.yticks(np.arange(yticks[0], yticks[1], yticks[2]))
+        plt.xticks(np.arange(xTicks[0], xTicks[1], xTicks[2]))
+        plt.yticks(np.arange(yTicks[0], yTicks[1], yTicks[2]))
         plt.grid()
         plt.savefig('{}'.format(path), dpi=300)  # /graf.png
 
 
 if __name__ == "__main__":
-    path = '/home/pi/results/insert/2017_0011'
-    plotter = HandyPlotter()
-    plotter.plot_all(
-        path=path,
-        nAvg=[5, 10, 15],
-        plt=plt,
-        )
+    print('Invoke the module, do not run it directly')
