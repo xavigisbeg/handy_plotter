@@ -12,8 +12,9 @@ class HandyPlotter:
 
     def plot_all(
             self,
-            pathIn,
-            pathOut,
+            pathData,
+            pathPlot,
+            find,
             nAvg,
             xLim,
             yLim,
@@ -22,32 +23,42 @@ class HandyPlotter:
             ):
         'Function that generates all the graphs'
 
-        ls = sorted(os.listdir(pathIn))
+        ls = sorted(os.listdir(pathData))
         for fle in ls:
             if ('log' not in fle):
-                xVals, yVals, xAvgVals, yAvgVals = self.read_excels(
-                    path='{}/{}'.format(
-                        pathIn,
-                        fle),
-                    nAvg=nAvg,
-                    )
+                if ((find in fle) and True):
+                    """and - or True: change to enable or disable the A, B or C
+                    differentiation"""
 
-                self.plt.figure(1)
-                self.plt = self.add_plot(
-                    xvals=xVals,
-                    yvals=yVals,
-                    # color='b',
-                    plt=self.plt,
-                    )
+                    xVals, yVals, xAvgVals, yAvgVals = self.read_excels(
+                        path='{}/{}'.format(
+                            pathData,
+                            fle),
+                        nAvg=nAvg,
+                        )
 
-                for i in range(len(xAvgVals)):
-                    self.plt.figure(i + 2)
+                    self.plt.figure(1)
                     self.plt = self.add_plot(
-                        xvals=xAvgVals[i],
-                        yvals=yAvgVals[i],
+                        xvals=xVals,
+                        yvals=yVals,
                         # color='b',
                         plt=self.plt,
                         )
+
+                    for i in range(len(xAvgVals)):
+                        self.plt.figure(i + 2)
+                        self.plt = self.add_plot(
+                            xvals=xAvgVals[i],
+                            yvals=yAvgVals[i],
+                            # color='b',
+                            plt=self.plt,
+                            )
+
+        plotPlotF = '{}/{}'.format(pathPlot, find)
+        if (not os.path.exists(pathPlot)):
+            os.mkdir(pathPlot)
+        if (not os.path.exists(plotPlotF)):
+            os.mkdir(plotPlotF)
 
         for i in range(len(xAvgVals) + 1):
             self.plt.figure(i + 1)
@@ -57,8 +68,9 @@ class HandyPlotter:
                 xTicks=xTicks,  # (0, 2, 0.2),
                 yTicks=yTicks,  # (0, 18000, 1000),
                 plt=self.plt,
-                path='{}/graf{}.png'.format(pathOut, i),
+                path='{}/graf{}.png'.format(plotPlotF, i),
                 )
+            plt.clf()
 
     def add_plot(
             self,
@@ -68,9 +80,9 @@ class HandyPlotter:
             color=None,
             ):
         if (color is not None):
-            plt.plot(xvals, yvals, color)
+            plt.plot(xvals, yvals, color, linewidth=1.0)
         else:
-            plt.plot(xvals, yvals)
+            plt.plot(xvals, yvals, linewidth=1.0)
         return plt
 
     def read_excels(
@@ -97,7 +109,7 @@ class HandyPlotter:
             if (nAvg is not None):
                 xAvg, yAvg = [], []
                 for i in range(len(nAvg)):
-                    xAvg.append(self.avg_excels(inp=x, nAvg=nAvg[i]))
+                    xAvg.append(self.avg_excels(inp=x, nAvg=nAvg[i]))  # .app(x)
                     yAvg.append(self.avg_excels(inp=y, nAvg=nAvg[i]))
             else:
                 xAvg, yAvg = None, None
