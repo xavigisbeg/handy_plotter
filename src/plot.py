@@ -29,7 +29,10 @@ class HandyPlotter:
 
         ls = sorted(os.listdir(pathData))
         for fle in ls:
-            if ('log' not in fle):
+            if ('log' not in fle and os.path.isfile('{}{}{}'.format(
+                    pathData,
+                    self.bar,
+                    fle,))):
                 if ((find in fle) and True):
                     """and - or True: change to enable or disable the A, B or C
                     differentiation"""
