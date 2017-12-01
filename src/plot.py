@@ -22,6 +22,10 @@ class HandyPlotter:
             yTicks,
             ):
         'Function that generates all the graphs'
+        if (os.name == 'nt'):
+            self.bar = '\\'
+        else:
+            self.bar = '/'
 
         ls = sorted(os.listdir(pathData))
         for fle in ls:
@@ -31,8 +35,9 @@ class HandyPlotter:
                     differentiation"""
 
                     xVals, yVals, xAvgVals, yAvgVals = self.read_excels(
-                        path='{}/{}'.format(
+                        path='{}{}{}'.format(
                             pathData,
+                            self.bar,
                             fle),
                         nAvg=nAvg,
                         )
@@ -54,7 +59,10 @@ class HandyPlotter:
                             plt=self.plt,
                             )
 
-        plotPlotF = '{}/{}'.format(pathPlot, find)
+        plotPlotF = '{}{}{}'.format(
+            pathPlot,
+            self.bar,
+            find,)
         if (not os.path.exists(pathPlot)):
             os.mkdir(pathPlot)
         if (not os.path.exists(plotPlotF)):
@@ -68,7 +76,10 @@ class HandyPlotter:
                 xTicks=xTicks,  # (0, 2, 0.2),
                 yTicks=yTicks,  # (0, 18000, 1000),
                 plt=self.plt,
-                path='{}/graf{}.png'.format(plotPlotF, i),
+                path='{}{}graf{}.png'.format(
+                    plotPlotF,
+                    self.bar,
+                    i,),
                 )
             plt.clf()
 
