@@ -29,6 +29,7 @@ class HandyPlotter:
 
         ls = sorted(os.listdir(pathData))
         for fle in ls:
+            fle_name = fle.split('.')[0]
             if ('log' not in fle and os.path.isfile('{}{}{}'.format(
                     pathData,
                     self.bar,
@@ -50,8 +51,10 @@ class HandyPlotter:
                         xvals=xVals,
                         yvals=yVals,
                         # color='b',
+                        label=fle_name,
                         plt=self.plt,
                         )
+                    self.plt.legend(handler_map={}, loc=4)
 
                     for i in range(len(xAvgVals)):
                         self.plt.figure(i + 2)
@@ -59,8 +62,10 @@ class HandyPlotter:
                             xvals=xAvgVals[i],
                             yvals=yAvgVals[i],
                             # color='b',
+                            label=fle_name,
                             plt=self.plt,
                             )
+                        self.plt.legend(handler_map={}, loc=4)
 
         plotPlotF = '{}{}{}'.format(
             pathPlot,
@@ -91,12 +96,13 @@ class HandyPlotter:
             xvals,
             yvals,
             plt,
+            label,
             color=None,
             ):
         if (color is not None):
-            plt.plot(xvals, yvals, color, linewidth=1.0)
+            plt.plot(xvals, yvals, color, label=label, linewidth=1.0)
         else:
-            plt.plot(xvals, yvals, linewidth=1.0)
+            plt.plot(xvals, yvals, label=label, linewidth=1.0)
         return plt
 
     def read_excels(
