@@ -9,6 +9,11 @@ class HandyPlotter:
 
     def __init__(self):
         self.plt = plt
+        self.title = {
+            'A': 'Primer clavado',
+            'B': 'Segundo clavado',
+            'C': 'Tercer clavado',
+            }
 
     def plot_all(
             self,
@@ -30,6 +35,13 @@ class HandyPlotter:
         ls = sorted(os.listdir(pathData))
         for fle in ls:
             fle_name = fle.split('.')[0]
+            if ('A' in fle):
+                title = 'A'
+            elif ('B' in fle):
+                title = 'B'
+            elif ('C' in fle):
+                title = 'C'
+
             if ('log' not in fle and os.path.isfile('{}{}{}'.format(
                     pathData,
                     self.bar,
@@ -47,6 +59,9 @@ class HandyPlotter:
                         )
 
                     self.plt.figure(1)
+                    self.plt.figure(1).suptitle(self.title[title])
+                    self.plt.xlabel('Tiempo [s]')
+                    self.plt.ylabel('Fuerza [digital]')
                     self.plt = self.add_plot(
                         xvals=xVals,
                         yvals=yVals,
@@ -57,7 +72,13 @@ class HandyPlotter:
                     self.plt.legend(handler_map={}, loc=4)
 
                     for i in range(len(xAvgVals)):
+                        thisTitle = '{}, media {}'.format(
+                            self.title[title],
+                            nAvg[i],)
                         self.plt.figure(i + 2)
+                        self.plt.figure(i + 2).suptitle(thisTitle)
+                        self.plt.xlabel('Tiempo [s]')
+                        self.plt.ylabel('Fuerza [digital]')
                         self.plt = self.add_plot(
                             xvals=xAvgVals[i],
                             yvals=yAvgVals[i],
