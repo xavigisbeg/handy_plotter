@@ -2,8 +2,8 @@ import context as HP
 import os
 
 if (os.name == 'nt'):
-    pathData = 'C:\\Users\\Electronics\\github\\scripts\\input\\2017_2426'
-    pathPlot = 'C:\\Users\\Electronics\\github\\scripts\\output'
+    pathData = '//SERVIDORSQL/Datos/Desarrollos y pruebas/Automatitzacio/Dades Proves/Insertion/2017_2426'
+    pathPlot = '//SERVIDORSQL/Datos/Desarrollos y pruebas/Automatitzacio/Dades Proves/Insertion/2017_2426'
 else:
     pathData = '/home/pi/results/insert/{}'.format(OT)
     pathPlot = '/home/pi/results/plots/{}'.format(OT)
