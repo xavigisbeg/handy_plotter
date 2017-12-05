@@ -1,9 +1,17 @@
 import context as HP
 import os
 
+OT = '2017_2426'
+
 if (os.name == 'nt'):
-    pathData = '//SERVIDORSQL/Datos/Desarrollos y pruebas/Automatitzacio/Dades Proves/Insertion/2017_2426'
-    pathPlot = '//SERVIDORSQL/Datos/Desarrollos y pruebas/Automatitzacio/Dades Proves/Insertion/2017_2426'
+    pathData = '{}{}/{}'.format(
+        '//SERVIDORSQL/Datos/Desarrollos y pruebas/',
+        'Automatitzacio/Dades Proves/Insertion',
+        OT)
+    pathPlot = '{}{}/{}'.format(
+        '//SERVIDORSQL/Datos/Desarrollos y pruebas/',
+        'Automatitzacio/Dades Proves/Insertion',
+        OT)
 else:
     pathData = '/home/pi/results/insert/{}'.format(OT)
     pathPlot = '/home/pi/results/plots/{}'.format(OT)
