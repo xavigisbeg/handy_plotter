@@ -15,5 +15,5 @@ sys.path.insert(
         )
     )
 
-from src.plot import HandyPlotter
+from handy_plotter.src.plot import HandyPlotter
 # import get_ip
