@@ -6,38 +6,33 @@ OT = '2017_2426'
 if (os.name == 'nt'):
     pathData = '{}{}/{}'.format(
         '//SERVIDORSQL/Datos/Desarrollos y pruebas/',
-        'Automatitzacio/Dades Proves/Insertion',
+        'Automatitzacio/Dades Proves/Termoparell',
         OT)
     pathPlot = '{}{}/{}'.format(
         '//SERVIDORSQL/Datos/Desarrollos y pruebas/',
-        'Automatitzacio/Dades Proves/Insertion',
+        'Automatitzacio/Dades Proves/Termoparell',
         OT)
 else:
-    pathData = '/home/pi/results/insert/{}'.format(OT)
+    pathData = '/home/pi/results/therm/{}'.format(OT)
     pathPlot = '/home/pi/results/plots/{}'.format(OT)
 
 try:
     plotter = HP.HandyPlotter()
     allPlots = True
-    whatInsert = 'A'
+    whatTc = 'A'
     if (not allPlots):
         plotter.plot_all(
             pathData=pathData,
             pathPlot=pathPlot,
-            find=whatInsert,
+            find=whatTc,
             )
     else:
-        find = ['A', 'B', 'C']
+        find = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
         for i in range(len(find)):
             plotter.plot_all(
                 pathData=pathData,
                 pathPlot=pathPlot,
                 find=find[i],
-                nAvg=[5, 10, 15],
-                xLim=(0, 2),
-                yLim=(0, 20000),
-                xTicks=(0, 2, 0.2),
-                yTicks=(0, 20000, 1000),
                 )
 except KeyboardInterrupt:
     print('Cancel')

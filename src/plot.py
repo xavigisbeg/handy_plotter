@@ -20,11 +20,11 @@ class HandyPlotter:
             pathData,
             pathPlot,
             find,
-            nAvg,
-            xLim,
-            yLim,
-            xTicks,
-            yTicks,
+            nAvg=None,
+            xLim=None,
+            yLim=None,
+            xTicks=None,
+            yTicks=None,
             ):
         'Function that generates all the graphs'
         if (os.name == 'nt'):
@@ -35,20 +35,15 @@ class HandyPlotter:
         ls = sorted(os.listdir(pathData))
         for fle in ls:
             fle_name = fle.split('.')[0]
-            if ('A' in fle):
-                title = 'A'
-            elif ('B' in fle):
-                title = 'B'
-            elif ('C' in fle):
-                title = 'C'
-
             if ('log' not in fle and os.path.isfile('{}{}{}'.format(
                     pathData,
                     self.bar,
-                    fle,))):
+                    fle,
+                    ))):
                 if ((find in fle) and True):
                     """and - or True: change to enable or disable the A, B or C
                     differentiation"""
+                    title = find
 
                     xVals, yVals, xAvgVals, yAvgVals = self.read_excels(
                         path='{}{}{}'.format(
@@ -82,7 +77,7 @@ class HandyPlotter:
                         self.plt = self.add_plot(
                             xvals=xAvgVals[i],
                             yvals=yAvgVals[i],
-                            # color='b',
+                            # color='b',  # To enforce a color
                             label=fle_name,
                             plt=self.plt,
                             )
@@ -100,10 +95,10 @@ class HandyPlotter:
         for i in range(len(xAvgVals) + 1):
             self.plt.figure(i + 1)
             self.save_plot(
-                xLim=xLim,  # (0, 2),
-                yLim=yLim,  # (0, 18000),
-                xTicks=xTicks,  # (0, 2, 0.2),
-                yTicks=yTicks,  # (0, 18000, 1000),
+                xLim=xLim,
+                yLim=yLim,
+                xTicks=xTicks,
+                yTicks=yTicks,
                 plt=self.plt,
                 path='{}{}graf{}.png'.format(
                     plotPlotF,
@@ -150,7 +145,7 @@ class HandyPlotter:
             if (nAvg is not None):
                 xAvg, yAvg = [], []
                 for i in range(len(nAvg)):
-                    xAvg.append(self.avg_excels(inp=x, nAvg=nAvg[i]))  # .app(x)
+                    xAvg.append(self.avg_excels(inp=x, nAvg=nAvg[i]))
                     yAvg.append(self.avg_excels(inp=y, nAvg=nAvg[i]))
             else:
                 xAvg, yAvg = None, None
@@ -159,7 +154,7 @@ class HandyPlotter:
     def avg_excels(
             self,
             inp,
-            nAvg,  # =15,
+            nAvg,
             ):
         av = []
         for i in range(len(inp)):
@@ -185,13 +180,20 @@ class HandyPlotter:
             ):
         'Saves a simple plot with the introduced data'
 
-        plt.xlim(xLim)
-        # plt.yLim(yLim)
-        plt.ylim(ymin=0)
-        plt.xticks(np.arange(xTicks[0], xTicks[1], xTicks[2]))
-        plt.yticks(np.arange(yTicks[0], yTicks[1], yTicks[2]))
+        if (xLim is not None):
+            plt.xlim(xLim)
+        else:
+            plt.xlim(xmin=0)  # To only set the lower limit
+        if (yLim is not None):
+            plt.ylim(yLim)
+        else:
+            plt.ylim(ymin=0)  # To only set the lower limit
+        if (xTicks is not None):
+            plt.xticks(np.arange(xTicks[0], xTicks[1], xTicks[2]))
+        if (yTicks is not None):
+            plt.yticks(np.arange(yTicks[0], yTicks[1], yTicks[2]))
         plt.grid()
-        plt.savefig('{}'.format(path), dpi=300)  # /graf.png
+        plt.savefig('{}'.format(path), dpi=300)
 
 
 if __name__ == "__main__":
