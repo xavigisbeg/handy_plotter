@@ -13,6 +13,7 @@ class HandyPlotter:
             'A': 'Primer clavado',
             'B': 'Segundo clavado',
             'C': 'Tercer clavado',
+            '0': 'Horno'
             }
 
     def plot_all(
@@ -20,7 +21,9 @@ class HandyPlotter:
             pathData,
             pathPlot,
             find,
-            nAvg=None,
+            xPos,
+            yPos,
+            nAvg=[],
             xLim=None,
             yLim=None,
             xTicks=None,
@@ -50,7 +53,10 @@ class HandyPlotter:
                             pathData,
                             self.bar,
                             fle),
+                        xPos=xPos,
+                        yPos=yPos,
                         nAvg=nAvg,
+                        xLim=xLim,
                         )
 
                     self.plt.figure(1)
@@ -58,8 +64,8 @@ class HandyPlotter:
                     self.plt.xlabel('Tiempo [s]')
                     self.plt.ylabel('Fuerza [digital]')
                     self.plt = self.add_plot(
-                        xvals=xVals,
-                        yvals=yVals,
+                        xVals=xVals,
+                        yVals=yVals,
                         # color='b',
                         label=fle_name,
                         plt=self.plt,
@@ -75,8 +81,8 @@ class HandyPlotter:
                         self.plt.xlabel('Tiempo [s]')
                         self.plt.ylabel('Fuerza [digital]')
                         self.plt = self.add_plot(
-                            xvals=xAvgVals[i],
-                            yvals=yAvgVals[i],
+                            xVals=xAvgVals[i],
+                            yVals=yAvgVals[i],
                             # color='b',  # To enforce a color
                             label=fle_name,
                             plt=self.plt,
@@ -109,23 +115,27 @@ class HandyPlotter:
 
     def add_plot(
             self,
-            xvals,
-            yvals,
+            xVals,
+            yVals,
             plt,
             label,
             color=None,
             ):
         if (color is not None):
-            plt.plot(xvals, yvals, color, label=label, linewidth=1.0)
+            plt.plot(xVals, yVals, color, label=label, linewidth=1.0)
         else:
-            plt.plot(xvals, yvals, label=label, linewidth=1.0)
+            plt.plot(xVals, yVals, label=label, linewidth=1.0)
         return plt
 
     def read_excels(
             self,
             path,
+            xPos,
+            yPos,
+            xLim=None,
             nAvg=None,
             ):
+        'Read the excel and introduce the values into '
         with open(path, 'r') as f:
             lines = f.readlines()
             x = []
@@ -135,13 +145,16 @@ class HandyPlotter:
                     pass
                 else:
                     msg = line.split(';')
-                    if (float(msg[1].replace(',', '.')) > 2.0):
+                    if ((xLim is not None) and
+                            (float(msg[xPos].replace(',', '.')) > xLim[1])):
+                        # Mark what the limit is
                         break
                     else:
-                        x.append(float(msg[1].replace(',', '.')))
-                        y.append(int(msg[2].replace('\n', '')))
+                        # Keep adding data
+                        x.append(float(msg[xPos].replace(',', '.')))
+                        y.append(float(msg[yPos].replace('\n', '').replace(',', '.')))
 
-            """ Get averages """
+            """Get averages"""
             if (nAvg is not None):
                 xAvg, yAvg = [], []
                 for i in range(len(nAvg)):
@@ -156,6 +169,8 @@ class HandyPlotter:
             inp,
             nAvg,
             ):
+        '''LPF: Averages the f(t) function, to eliminate high
+        frequencies'''
         av = []
         for i in range(len(inp)):
             avg = 0

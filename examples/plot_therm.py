@@ -1,7 +1,7 @@
 import context as HP
 import os
 
-OT = '2017_2426'
+OT = '2018_0000'
 
 if (os.name == 'nt'):
     pathData = '{}{}/{}'.format(
@@ -27,12 +27,14 @@ try:
             find=whatTc,
             )
     else:
-        find = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
+        find = ['0']
         for i in range(len(find)):
             plotter.plot_all(
                 pathData=pathData,
                 pathPlot=pathPlot,
                 find=find[i],
+                xPos=1,
+                yPos=2,
                 )
 except KeyboardInterrupt:
     print('Cancel')
