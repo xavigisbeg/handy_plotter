@@ -19,20 +19,24 @@ else:
 try:
     plotter = HP.HandyPlotter()
     allPlots = True
-    whatTc = 'A'
+    whatTc = {
+        'A': 'Termopar A',
+        }
     if (not allPlots):
         plotter.plot_all(
             pathData=pathData,
             pathPlot=pathPlot,
-            find=whatTc,
+            find=whatTc['A'],
             )
     else:
-        find = ['0']
-        for i in range(len(find)):
+        find = {
+            '0': 'Primera Hornada',
+            }
+        for i in find:
             plotter.plot_all(
                 pathData=pathData,
                 pathPlot=pathPlot,
-                find=find[i],
+                find={'tag': i, 'title': find[i]},
                 xPos=1,
                 yPos=2,
                 )

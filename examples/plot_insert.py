@@ -27,12 +27,16 @@ try:
             find=whatInsert,
             )
     else:
-        find = ['A', 'B', 'C']
-        for i in range(len(find)):
+        find = {
+            'A': 'Primer clavado',
+            'B': 'Segundo clavado',
+            'C': 'Tercer clavado',
+            }
+        for i in find:
             plotter.plot_all(
                 pathData=pathData,
                 pathPlot=pathPlot,
-                find=find[i],
+                find={'tag': i, 'title': find[i]},
                 nAvg=[5, 10, 15],
                 xPos=1,
                 yPos=2,

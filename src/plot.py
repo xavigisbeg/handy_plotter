@@ -9,12 +9,6 @@ class HandyPlotter:
 
     def __init__(self):
         self.plt = plt
-        self.title = {
-            'A': 'Primer clavado',
-            'B': 'Segundo clavado',
-            'C': 'Tercer clavado',
-            '0': 'Horno'
-            }
 
     def plot_all(
             self,
@@ -35,6 +29,7 @@ class HandyPlotter:
         else:
             self.bar = '/'
 
+        """Iterate over the directories to find the ones containing tag"""
         ls = sorted(os.listdir(pathData))
         for fle in ls:
             fle_name = fle.split('.')[0]
@@ -43,10 +38,10 @@ class HandyPlotter:
                     self.bar,
                     fle,
                     ))):
-                if ((find in fle) and True):
+                if ((find['tag'] in fle) and True):
                     """and - or True: change to enable or disable the A, B or C
                     differentiation"""
-                    title = find
+                    """We are treating the right file"""
 
                     xVals, yVals, xAvgVals, yAvgVals = self.read_excels(
                         path='{}{}{}'.format(
@@ -59,8 +54,9 @@ class HandyPlotter:
                         xLim=xLim,
                         )
 
+                    """Input unaveraged data in2 its plot figure data struct"""
                     self.plt.figure(1)
-                    self.plt.figure(1).suptitle(self.title[title])
+                    self.plt.figure(1).suptitle(find['title'])
                     self.plt.xlabel('Tiempo [s]')
                     self.plt.ylabel('Fuerza [digital]')
                     self.plt = self.add_plot(
@@ -72,9 +68,10 @@ class HandyPlotter:
                         )
                     self.plt.legend(handler_map={}, loc=4)
 
+                    """Input averaged data"""
                     for i in range(len(xAvgVals)):
                         thisTitle = '{}, media {}'.format(
-                            self.title[title],
+                            find['title'],
                             nAvg[i],)
                         self.plt.figure(i + 2)
                         self.plt.figure(i + 2).suptitle(thisTitle)
@@ -92,7 +89,8 @@ class HandyPlotter:
         plotPlotF = '{}{}{}'.format(
             pathPlot,
             self.bar,
-            find,)
+            find['tag'],
+            )
         if (not os.path.exists(pathPlot)):
             os.mkdir(pathPlot)
         if (not os.path.exists(plotPlotF)):
@@ -109,7 +107,8 @@ class HandyPlotter:
                 path='{}{}graf{}.png'.format(
                     plotPlotF,
                     self.bar,
-                    i,),
+                    i,
+                    ),
                 )
             plt.clf()
 
@@ -151,8 +150,10 @@ class HandyPlotter:
                         break
                     else:
                         # Keep adding data
-                        x.append(float(msg[xPos].replace(',', '.')))
-                        y.append(float(msg[yPos].replace('\n', '').replace(',', '.')))
+                        x.append(float(
+                            msg[xPos].replace(',', '.')))
+                        y.append(float(
+                            msg[yPos].replace('\n', '').replace(',', '.')))
 
             """Get averages"""
             if (nAvg is not None):
