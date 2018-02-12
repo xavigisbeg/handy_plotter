@@ -1,7 +1,7 @@
 import context as HP
 import os
 
-OT = '2018_0000'
+OT = '2018_0002'
 
 if (os.name == 'nt'):
     pathData = '{}{}/{}'.format(
@@ -20,7 +20,7 @@ try:
     plotter = HP.HandyPlotter()
     allPlots = True
     whatTc = {
-        'A': 'Termopar A',
+        'L1': 'Termopar A',
         }
     if (not allPlots):
         plotter.plot_all(
@@ -30,7 +30,7 @@ try:
             )
     else:
         find = {
-            '0': 'Primera Hornada',
+            'L1': 'Primera Hornada',
             }
         for i in find:
             plotter.plot_all(
@@ -38,7 +38,12 @@ try:
                 pathPlot=pathPlot,
                 find={'tag': i, 'title': find[i]},
                 xPos=1,
-                yPos=2,
+                yPos=[2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                xLabel='Tiempo [min]',
+                yLabel='Temperatura [ºC]',
+                yLim=(0, 200),
+                xTicks=(0, 1500, 60),
+                yTicks=(0, 200, 10),
                 )
 except KeyboardInterrupt:
     print('Cancel')

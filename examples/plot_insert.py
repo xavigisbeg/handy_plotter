@@ -39,7 +39,7 @@ try:
                 find={'tag': i, 'title': find[i]},
                 nAvg=[5, 10, 15],
                 xPos=1,
-                yPos=2,
+                yPos=[2],
                 xLim=(0, 2),
                 yLim=(0, 20000),
                 xTicks=(0, 2, 0.2),

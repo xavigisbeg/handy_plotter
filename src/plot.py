@@ -16,8 +16,10 @@ class HandyPlotter:
             pathPlot,
             find,
             xPos,
-            yPos,
+            yPos,  # To be an array, to handle many columns in the same csv
             nAvg=[],
+            xLabel='Tiempo [s]',
+            yLabel='Fuerza [digital]',
             xLim=None,
             yLim=None,
             xTicks=None,
@@ -25,7 +27,7 @@ class HandyPlotter:
             ):
         'Function that generates all the graphs'
         if (os.name == 'nt'):
-            self.bar = '\\'
+            self.bar = '/'  # '\\'
         else:
             self.bar = '/'
 
@@ -43,48 +45,50 @@ class HandyPlotter:
                     differentiation"""
                     """We are treating the right file"""
 
-                    xVals, yVals, xAvgVals, yAvgVals = self.read_excels(
-                        path='{}{}{}'.format(
-                            pathData,
-                            self.bar,
-                            fle),
-                        xPos=xPos,
-                        yPos=yPos,
-                        nAvg=nAvg,
-                        xLim=xLim,
-                        )
+                    self.plt.figure(figsize=(16, 9))
+                    for j in yPos:
+                        xVals, yVals, xAvgVals, yAvgVals = self.read_excels(
+                            path='{}{}{}'.format(
+                                pathData,
+                                self.bar,
+                                fle),
+                            xPos=xPos,
+                            yPos=j,
+                            nAvg=nAvg,
+                            xLim=xLim,
+                            )
 
-                    """Input unaveraged data in2 its plot figure data struct"""
-                    self.plt.figure(1)
-                    self.plt.figure(1).suptitle(find['title'])
-                    self.plt.xlabel('Tiempo [s]')
-                    self.plt.ylabel('Fuerza [digital]')
-                    self.plt = self.add_plot(
-                        xVals=xVals,
-                        yVals=yVals,
-                        # color='b',
-                        label=fle_name,
-                        plt=self.plt,
-                        )
-                    self.plt.legend(handler_map={}, loc=4)
-
-                    """Input averaged data"""
-                    for i in range(len(xAvgVals)):
-                        thisTitle = '{}, media {}'.format(
-                            find['title'],
-                            nAvg[i],)
-                        self.plt.figure(i + 2)
-                        self.plt.figure(i + 2).suptitle(thisTitle)
-                        self.plt.xlabel('Tiempo [s]')
-                        self.plt.ylabel('Fuerza [digital]')
+                        """Input unaveraged data in2 plot figure data struct"""
+                        self.plt.figure(1)
+                        self.plt.figure(1).suptitle(find['title'])
+                        self.plt.xlabel(xLabel)
+                        self.plt.ylabel(yLabel)
                         self.plt = self.add_plot(
-                            xVals=xAvgVals[i],
-                            yVals=yAvgVals[i],
-                            # color='b',  # To enforce a color
+                            xVals=xVals,
+                            yVals=yVals,
+                            # color='b',
                             label=fle_name,
                             plt=self.plt,
                             )
                         self.plt.legend(handler_map={}, loc=4)
+
+                        """Input averaged data"""
+                        for i in range(len(xAvgVals)):
+                            thisTitle = '{}, media {}'.format(
+                                find['title'],
+                                nAvg[i],)
+                            self.plt.figure(i + 2)
+                            self.plt.figure(i + 2).suptitle(thisTitle)
+                            self.plt.xlabel(xLabel)
+                            self.plt.ylabel(yLabel)
+                            self.plt = self.add_plot(
+                                xVals=xAvgVals[i],
+                                yVals=yAvgVals[i],
+                                # color='b',  # To enforce a color
+                                label=fle_name,
+                                plt=self.plt,
+                                )
+                            self.plt.legend(handler_map={}, loc=4)
 
         plotPlotF = '{}{}{}'.format(
             pathPlot,
