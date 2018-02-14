@@ -34,7 +34,7 @@ class HandyPlotter:
         """Iterate over the directories to find the ones containing tag"""
         ls = sorted(os.listdir(pathData))
         for fle in ls:
-            fle_name = fle.split('.')[0]
+            # fle_name = fle.split('.')[0]
             if ('log' not in fle and os.path.isfile('{}{}{}'.format(
                     pathData,
                     self.bar,
@@ -47,7 +47,11 @@ class HandyPlotter:
 
                     self.plt.figure(figsize=(16, 9))
                     for j in yPos:
-                        xVals, yVals, xAvgVals, yAvgVals = self.read_excels(
+                        (
+                            xVals, yVals,
+                            xAvgVals, yAvgVals,
+                            title,
+                        ) = self.read_excels(
                             path='{}{}{}'.format(
                                 pathData,
                                 self.bar,
@@ -67,7 +71,7 @@ class HandyPlotter:
                             xVals=xVals,
                             yVals=yVals,
                             # color='b',
-                            label=fle_name,
+                            label=title,
                             plt=self.plt,
                             )
                         self.plt.legend(handler_map={}, loc=4)
@@ -85,7 +89,7 @@ class HandyPlotter:
                                 xVals=xAvgVals[i],
                                 yVals=yAvgVals[i],
                                 # color='b',  # To enforce a color
-                                label=fle_name,
+                                label=title,
                                 plt=self.plt,
                                 )
                             self.plt.legend(handler_map={}, loc=4)
@@ -100,7 +104,7 @@ class HandyPlotter:
         if (not os.path.exists(plotPlotF)):
             os.mkdir(plotPlotF)
 
-        for i in range(len(xAvgVals) + 1):
+        for i in range(len(nAvg) + 1):
             self.plt.figure(i + 1)
             self.save_plot(
                 xLim=xLim,
@@ -141,23 +145,22 @@ class HandyPlotter:
         'Read the excel and introduce the values into '
         with open(path, 'r') as f:
             lines = f.readlines()
+            title = lines[0].split(';')[yPos]
+            lines.pop(0)
             x = []
             y = []
             for line in lines:
-                if ('TimeOS' in line):
-                    pass
+                msg = line.split(';')
+                if ((xLim is not None) and
+                        (float(msg[xPos].replace(',', '.')) > xLim[1])):
+                    # Mark what the limit is
+                    break
                 else:
-                    msg = line.split(';')
-                    if ((xLim is not None) and
-                            (float(msg[xPos].replace(',', '.')) > xLim[1])):
-                        # Mark what the limit is
-                        break
-                    else:
-                        # Keep adding data
-                        x.append(float(
-                            msg[xPos].replace(',', '.')))
-                        y.append(float(
-                            msg[yPos].replace('\n', '').replace(',', '.')))
+                    # Keep adding data
+                    x.append(float(
+                        msg[xPos].replace(',', '.')))
+                    y.append(float(
+                        msg[yPos].replace('\n', '').replace(',', '.')))
 
             """Get averages"""
             if (nAvg is not None):
@@ -167,7 +170,7 @@ class HandyPlotter:
                     yAvg.append(self.avg_excels(inp=y, nAvg=nAvg[i]))
             else:
                 xAvg, yAvg = None, None
-            return x, y, xAvg, yAvg
+            return x, y, xAvg, yAvg, title
 
     def avg_excels(
             self,

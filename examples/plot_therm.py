@@ -1,7 +1,7 @@
 import context as HP
 import os
 
-OT = '2018_0002'
+OT = '2018_0215'
 
 if (os.name == 'nt'):
     pathData = '{}{}/{}'.format(
@@ -30,7 +30,7 @@ try:
             )
     else:
         find = {
-            'L1': 'Primera Hornada',
+            '2018_215': 'Primera Hornada',
             }
         for i in find:
             plotter.plot_all(
@@ -38,12 +38,12 @@ try:
                 pathPlot=pathPlot,
                 find={'tag': i, 'title': find[i]},
                 xPos=1,
-                yPos=[2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                yPos=[2, 5, 8, 12],
                 xLabel='Tiempo [min]',
                 yLabel='Temperatura [ºC]',
-                yLim=(0, 200),
-                xTicks=(0, 1500, 60),
-                yTicks=(0, 200, 10),
+                yLim=(0, 150),
+                xTicks=(0, 270, 20),
+                yTicks=(0, 150, 10),
                 )
 except KeyboardInterrupt:
     print('Cancel')
