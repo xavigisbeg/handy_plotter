@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from natsort import natsorted, ns
 import numpy as np
 import os
 
@@ -33,7 +34,7 @@ class HandyPlotter:
 			self.bar = '/'
 
 		"""Iterate over the directories to find the ones containing tag"""
-		ls = sorted(os.listdir(pathData))
+		ls = natsorted(os.listdir(pathData), key=lambda y: y.lower())
 		for fle in ls:
 			# fle_name = fle.split('.')[0]
 			if ('log' not in fle and os.path.isfile('{}{}{}'.format(
@@ -66,7 +67,7 @@ class HandyPlotter:
 							name = find['title']
 
 						"""Input unaveraged data in2 plot figure data struct"""
-						self.plt.figure(1)
+						self.plt.figure(1, figsize=(16, 9))
 						self.plt.figure(1).suptitle(find['title'])
 						self.plt.xlabel(xLabel)
 						self.plt.ylabel(yLabel)
@@ -84,7 +85,7 @@ class HandyPlotter:
 							thisTitle = '{}, media {}'.format(
 								find['title'],
 								nAvg[i], )
-							self.plt.figure(i + 2)
+							self.plt.figure(i + 2, figsize=(16, 9))
 							self.plt.figure(i + 2).suptitle(thisTitle)
 							self.plt.xlabel(xLabel)
 							self.plt.ylabel(yLabel)
