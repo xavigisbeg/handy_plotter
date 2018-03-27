@@ -17,6 +17,7 @@ class HandyPlotter:
 			find,
 			xPos,
 			yPos,  # To be an array, to handle many columns in the same csv
+			naming,
 			nAvg=[],
 			xLabel='Tiempo [s]',
 			yLabel='Fuerza [digital]',
@@ -52,15 +53,17 @@ class HandyPlotter:
 							xAvgVals, yAvgVals,
 							title,
 						) = self.read_excels(
-							path='{}{}{}'.format(
-								pathData,
-								self.bar,
-								fle),
+							path='{}{}{}'.format(pathData, self.bar, fle),
 							xPos=xPos,
 							yPos=j,
 							nAvg=nAvg,
 							xLim=xLim,
 						)
+
+						if naming == 'file':
+							name = fle.split('_')[0]
+						elif naming == 'column':
+							name = find['title']
 
 						"""Input unaveraged data in2 plot figure data struct"""
 						self.plt.figure(1)
@@ -71,7 +74,7 @@ class HandyPlotter:
 							xVals=xVals,
 							yVals=yVals,
 							# color='b',
-							label=title,
+							label=name,
 							plt=self.plt,
 						)
 						self.plt.legend(handler_map={}, loc=4)
@@ -89,7 +92,7 @@ class HandyPlotter:
 								xVals=xAvgVals[i],
 								yVals=yAvgVals[i],
 								# color='b',  # To enforce a color
-								label=title,
+								label=name,
 								plt=self.plt,
 							)
 							self.plt.legend(handler_map={}, loc=4)
@@ -137,17 +140,19 @@ class HandyPlotter:
 			y = []
 			for line in lines:
 				msg = line.split(';')
-				if ((xLim is not None) and
-						(float(msg[xPos].replace(',', '.')) > xLim[1])):
-					# Mark what the limit is
-					break
-				else:
-					# Keep adding data
-					x.append(float(
-						msg[xPos].replace(',', '.')))
-					y.append(float(
-						msg[yPos].replace('\n', '').replace(',', '.')))
-
+				try:
+					if ((xLim is not None) and
+							(float(msg[xPos].replace(',', '.')) > xLim[1])):
+						# Mark what the limit is
+						break
+					else:
+						# Keep adding data
+						x.append(float(
+							msg[xPos].replace(',', '.')))
+						y.append(float(
+							msg[yPos].replace('\n', '').replace(',', '.')))
+				except ValueError as err:
+					print(err)
 			"""Get averages"""
 			if nAvg is not None:
 				xAvg, yAvg = [], []
