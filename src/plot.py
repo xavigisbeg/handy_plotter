@@ -64,7 +64,7 @@ class HandyPlotter:
 						if naming == 'file':
 							name = fle.split('_')[0]
 						elif naming == 'column':
-							name = find['title']
+							name = title
 
 						"""Input unaveraged data in2 plot figure data struct"""
 						self.plt.figure(1, figsize=(16, 9))
