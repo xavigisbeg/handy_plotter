@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from natsort import natsorted, ns
 import numpy as np
@@ -123,6 +125,7 @@ class HandyPlotter:
 				),
 			)
 			plt.clf()
+			plt.close('all')
 
 	def add_plot(self, xVals, yVals, plt, label, color=None):
 		if color is not None:
